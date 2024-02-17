@@ -3,3 +3,4 @@
 **/obj/*
 pmtAuth/src/pmtAuth/appsettings.Development.json
 pmtAuth/src/pmtAuth/appsettings.json
+.vscode/launch.json
