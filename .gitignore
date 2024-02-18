@@ -1,6 +1,7 @@
 # compiled
 **/bin/*
 **/obj/*
+**/.nupkg
 
 # settings
 pmtAuth/src/pmtAuth/appsettings.Development.json
