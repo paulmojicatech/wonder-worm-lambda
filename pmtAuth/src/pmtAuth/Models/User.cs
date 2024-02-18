@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 
 namespace pmt_auth.Models
 {
@@ -14,5 +15,6 @@ namespace pmt_auth.Models
     public required string Email { get; set; } = string.Empty;
     public required string DateOfBirth { get; set; } = string.Empty; 
     public required string PasswordHash { get; set; } = string.Empty;
+    public ICollection<Children> Children { get; set; }
   }
 }
