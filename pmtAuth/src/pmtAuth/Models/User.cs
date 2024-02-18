@@ -15,6 +15,12 @@ namespace pmt_auth.Models
     public required string Email { get; set; } = string.Empty;
     public required string DateOfBirth { get; set; } = string.Empty; 
     public required string PasswordHash { get; set; } = string.Empty;
+    public required UserStatus Status { get; set; } = UserStatus.PENDING;
     public ICollection<Children> Children { get; set; }
   }
+}
+
+public enum UserStatus {
+  PENDING = 0,
+  ACTIVE
 }
