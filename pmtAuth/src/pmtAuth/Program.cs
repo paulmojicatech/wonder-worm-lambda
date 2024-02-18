@@ -1,4 +1,7 @@
 using Swashbuckle.AspNetCore.Filters;
+using System.Text.Json;
+using Microsoft.EntityFrameworkCore;
+using pmt_auth.Context;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +23,31 @@ builder.Services.AddSwaggerGen(options => {
   });
   options.OperationFilter<SecurityRequirementsOperationFilter>();
 });
+
+// add auth
+builder.Services.AddAuthentication().AddJwtBearer(options => {
+  options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+  {
+    ValidateIssuer = false,
+    ValidateAudience = false,    
+    ValidateIssuerSigningKey = true,
+    IssuerSigningKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(builder.Configuration.GetValue<string>("TokenKey")))
+  };
+});
+
+// add Postgres
+string dbConn = builder.Configuration.GetConnectionString("Postgres");
+builder.Services.AddDbContext<PmtAuthContext>(options =>
+{
+  options.UseNpgsql(dbConn);
+});
+
+// add JSON Serializer
+builder.Services.Configure<JsonSerializerOptions>(options =>
+{
+  options.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+});
+
 
 var app = builder.Build();
 
