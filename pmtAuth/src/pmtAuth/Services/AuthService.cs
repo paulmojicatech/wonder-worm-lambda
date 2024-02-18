@@ -51,7 +51,11 @@ namespace pmt_auth.Services
       if (!Regex.IsMatch(request.Email, emailPattern))
       {
         return false;
-      }       
+      }
+      if (DoesEmailAlreadyExist(request.Email))
+      {
+        return false;
+      }
       if (!DateTime.TryParse(request.DateOfBirth, out DateTime dob))
       {
         return false;
@@ -64,5 +68,11 @@ namespace pmt_auth.Services
       return true;
 
     }
+
+    private bool DoesEmailAlreadyExist(string email)
+    {
+      return _context.Users.Any(u => u.Email == email);
+    }
+
   }
 }
