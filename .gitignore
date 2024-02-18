@@ -6,6 +6,7 @@
 # settings
 pmtAuth/src/pmtAuth/appsettings.Development.json
 pmtAuth/src/pmtAuth/appsettings.json
+**/.vscode/*
 .vscode/launch.json
 
 # migrations
