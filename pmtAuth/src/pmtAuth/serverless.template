@@ -9,7 +9,7 @@
       "Type": "AWS::Serverless::Function",
       "Properties": {
         "Handler": "pmtAuth",
-        "Runtime": "dotnet6",
+        "Runtime": "dotnet7",
         "CodeUri": "",
         "MemorySize": 256,
         "Timeout": 30,
