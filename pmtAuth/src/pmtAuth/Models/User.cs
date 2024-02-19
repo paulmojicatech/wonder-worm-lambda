@@ -11,11 +11,16 @@ namespace pmt_auth.Models
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public Guid Id { get; set; }    
-    public required string Name { get; set; } = string.Empty;
-    public required string Email { get; set; } = string.Empty;
-    public required string DateOfBirth { get; set; } = string.Empty; 
-    public required string PasswordHash { get; set; } = string.Empty;
-    public required UserStatus Status { get; set; } = UserStatus.PENDING;
+    [Required]
+    public string Name { get; set; } = string.Empty;
+    [Required]
+    public string Email { get; set; } = string.Empty;
+    [Required]
+    public string DateOfBirth { get; set; } = string.Empty; 
+    [Required]
+    public string PasswordHash { get; set; } = string.Empty;
+    [Required]
+    public UserStatus Status { get; set; } = UserStatus.PENDING;
     public ICollection<Children> Children { get; set; }
   }
 }

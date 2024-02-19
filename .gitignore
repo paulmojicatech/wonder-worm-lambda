@@ -11,3 +11,7 @@ pmtAuth/src/pmtAuth/appsettings.json
 
 # migrations
 **/Migrations/*
+.DS_Store
+pmtAuth/.DS_Store
+pmtAuth/src/.DS_Store
+pmtAuth/src/pmtAuth/.DS_Store
