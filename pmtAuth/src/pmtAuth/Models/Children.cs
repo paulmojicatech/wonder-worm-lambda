@@ -10,7 +10,9 @@ namespace pmt_auth.Models
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     
     public Guid Id { get; set; }    
-    public required string Name { get; set; } = string.Empty;    
-    public required string DateOfBirth { get; set; } = string.Empty;
+    [Required]
+    public string Name { get; set; } = string.Empty;    
+    [Required]
+    public string DateOfBirth { get; set; } = string.Empty;
   }
 }
