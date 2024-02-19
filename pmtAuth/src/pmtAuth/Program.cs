@@ -1,6 +1,6 @@
-using Swashbuckle.AspNetCore.Filters;
 using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
+using Amazon.S3;
 using pmt_auth.Context;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,19 +10,10 @@ builder.Services.AddControllers();
 
 // Add AWS Lambda support. When application is run in Lambda Kestrel is swapped out as the web server with Amazon.Lambda.AspNetCoreServer. This
 // package will act as the webserver translating request and responses between the Lambda event source and ASP.NET Core.
-builder.Services.AddAWSLambdaHosting(LambdaEventSource.RestApi);
+builder.Services.AddAWSLambdaHosting(LambdaEventSource.HttpApi);
 
-// add swagger
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(options => {
-  options.AddSecurityDefinition("oauth2", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
-  {
-    In = Microsoft.OpenApi.Models.ParameterLocation.Header,
-    Name = "Authorization",
-    Type = Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey
-  });
-  options.OperationFilter<SecurityRequirementsOperationFilter>();
-});
+// Add S3 service client to dependency injection container
+builder.Services.AddAWSService<IAmazonS3>();
 
 // add auth
 builder.Services.AddAuthentication().AddJwtBearer(options => {
@@ -36,7 +27,7 @@ builder.Services.AddAuthentication().AddJwtBearer(options => {
 });
 
 // add Postgres
-string dbConn = builder.Configuration.GetConnectionString("Postgres");
+string dbConn = $"Host={builder.Configuration.GetValue<string>("DBHost")};Port={builder.Configuration.GetValue<int>("DBPort")};Database={builder.Configuration.GetValue<string>("DBName")};Username={builder.Configuration.GetValue<string>("DBUser")};Password={builder.Configuration.GetValue<string>("DBPassword")};";
 builder.Services.AddDbContext<PmtAuthContext>(options =>
 {
   options.UseNpgsql(dbConn);
