@@ -30,7 +30,8 @@ namespace pmt_auth.Services
           Email = request.Email,
           DateOfBirth = request.DateOfBirth,
           PasswordHash = hashedPassword,
-          Status = UserStatus.PENDING
+          Status = UserStatus.PENDING,
+          RegistrationCode = Guid.NewGuid()
         };
         _context.Users.Add(user);
         _context.SaveChanges();
