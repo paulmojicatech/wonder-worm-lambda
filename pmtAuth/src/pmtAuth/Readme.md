@@ -47,5 +47,5 @@ If already installed check if new version is available.
 Deploy application
 ```
     cd "pmtAuth/src/pmtAuth"
-    dotnet lambda deploy-serverless
+    dotnet lambda deploy-function pmtAuth --region us-east-1
 ```
