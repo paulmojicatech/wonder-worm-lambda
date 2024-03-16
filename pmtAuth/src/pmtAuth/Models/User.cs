@@ -21,7 +21,7 @@ namespace pmt_auth.Models
     [Required]
     public UserStatus Status { get; set; } = UserStatus.PENDING;
     public ICollection<Children> Children { get; set; }
-    public Guid RegistrationCode {get;set;}
+    public string RegistrationCode {get;set;}
   }
 }
 
