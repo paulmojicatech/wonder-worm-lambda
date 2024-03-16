@@ -1,4 +1,8 @@
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 using System.Text.RegularExpressions;
+using Microsoft.IdentityModel.Tokens;
 using pmt_auth.Context;
 using pmt_auth.Models;
 
@@ -42,6 +46,27 @@ namespace pmt_auth.Services
       }      
     }
 
+    public string Login(string email, string password)
+    {
+      try
+      {
+        User user = _context.Users.FirstOrDefault(u => u.Email == email);
+        if (user == null)
+        {
+          throw new Exception("Invalid request");
+        }
+        if (!BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
+        {
+          throw new Exception("Invalid request");
+        }
+        return CreateToken(user, _tokenKey);
+      }
+      catch
+      {
+        throw;
+      }
+    }
+    
     private bool ValidateRegisterRequest(RegisterHttpPostRequest request)
     {      
       if (string.IsNullOrEmpty(request.Name) || string.IsNullOrEmpty(request.Email) || string.IsNullOrEmpty(request.DateOfBirth) || string.IsNullOrEmpty(request.Password))
@@ -73,6 +98,29 @@ namespace pmt_auth.Services
     private bool DoesEmailAlreadyExist(string email)
     {
       return _context.Users.Any(u => u.Email == email);
+    }
+
+    private string CreateToken(User user, string tokenKey)
+    {
+      try
+      {
+        List<Claim> claims = new List<Claim>
+        {
+          new Claim(ClaimTypes.Name, user.Email)
+        };
+        SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_tokenKey));
+        SigningCredentials cred = new SigningCredentials(key, SecurityAlgorithms.Aes128CbcHmacSha256);
+        JwtSecurityToken token = new JwtSecurityToken(
+          claims: claims,
+          expires: DateTime.Now.AddDays(1),
+          signingCredentials: cred);
+        string jwt = new JwtSecurityTokenHandler().WriteToken(token);
+        return jwt;
+      }
+      catch
+      {
+        throw;
+      }
     }
 
   }

@@ -37,6 +37,27 @@ namespace pmt_auth.Controllers {
         }        
       }
     }
+
+    [HttpPost("login")]
+    public async Task<IActionResult> Login([FromBody]LoginHttpPostRequest request)
+    {
+      try
+      {
+        string token = _authSvc.Login(request.Email, request.Password);
+        return Ok(token);
+      }
+      catch (Exception ex)
+      {
+        if (ex.Message == "Invalid request")
+        {
+          return BadRequest(ex.Message);
+        }
+        else
+        {
+          return StatusCode(500, ex.Message);
+        }
+      }
+    }
   }
   
 }
