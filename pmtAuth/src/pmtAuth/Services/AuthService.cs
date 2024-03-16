@@ -31,7 +31,7 @@ namespace pmt_auth.Services
           DateOfBirth = request.DateOfBirth,
           PasswordHash = hashedPassword,
           Status = UserStatus.PENDING,
-          RegistrationCode = Guid.NewGuid()
+          RegistrationCode = Guid.NewGuid().ToString()
         };
         _context.Users.Add(user);
         _context.SaveChanges();
