@@ -42,9 +42,9 @@ namespace pmt_auth.Controllers {
     public async Task<IActionResult> Login([FromBody]LoginHttpPostRequest request)
     {
       try
-      {
-        string token = _authSvc.Login(request.Email, request.Password);
-        return Ok(token);
+      {        
+        LoginHttpPostResponse response = _authSvc.Login(request.Email, request.Password);
+        return Ok(response);
       }
       catch (Exception ex)
       {

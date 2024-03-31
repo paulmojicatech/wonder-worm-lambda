@@ -46,7 +46,7 @@ namespace pmt_auth.Services
       }      
     }
 
-    public string Login(string email, string password)
+    public LoginHttpPostResponse Login(string email, string password)
     {
       try
       {
@@ -59,7 +59,14 @@ namespace pmt_auth.Services
         {
           throw new Exception("Invalid request");
         }
-        return CreateToken(user, _tokenKey);
+        string token = CreateToken(user, _tokenKey);
+        return new LoginHttpPostResponse
+        {
+          Token = token,
+          UserEmail = user.Email,
+          Name = user.Name,
+          Children = user.Children
+        };        
       }
       catch
       {
