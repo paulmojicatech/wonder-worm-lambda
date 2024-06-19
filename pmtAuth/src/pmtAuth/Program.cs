@@ -2,6 +2,7 @@ using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using Amazon.S3;
 using pmt_auth.Context;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,7 +17,7 @@ builder.Services.AddAWSLambdaHosting(LambdaEventSource.HttpApi);
 builder.Services.AddAWSService<IAmazonS3>();
 
 // add auth
-builder.Services.AddAuthentication().AddJwtBearer(options => {
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options => {
   options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
   {
     ValidateIssuer = false,
@@ -53,7 +54,7 @@ app.UseCors(options => options
   .AllowCredentials()
 );
 
-
+app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 
