@@ -4,6 +4,7 @@ using pmt_auth.Services;
 using pmt_auth.Context;
 using pmt_auth.Models;
 using Microsoft.AspNetCore.Authorization;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace pmt_auth.Controllers {
 
@@ -12,6 +13,8 @@ namespace pmt_auth.Controllers {
   {
     private AuthService _authSvc;
     private IConfiguration _config;
+
+    private readonly string _NAME_FROM_TOKEN_KEY = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name";
 
     public AuthController(PmtAuthContext ctx, IConfiguration config) {
       _config = config;
@@ -24,7 +27,14 @@ namespace pmt_auth.Controllers {
     {
       try
       {
-        return Ok();
+        string token = HttpContext.Request.Headers["Authorization"].ToString()?.Split("Bearer ")[1];
+        if (string.IsNullOrEmpty(token))
+        {
+          return StatusCode(401, "Unauthorized");
+        }
+        var jwtToken = new JwtSecurityToken(token);
+        var name = jwtToken.Payload.First(data => data.Key == _NAME_FROM_TOKEN_KEY).Value.ToString();
+        return Ok(new VerifyTokenHttpGetResponse() { Name = name });
       }
       catch (Exception ex)
       {

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 using System.IdentityModel.Tokens.Jwt;
+using pmt_story_time.Services;
 
 namespace api.pmt_story_time.Controllers
 {
@@ -12,12 +13,14 @@ namespace api.pmt_story_time.Controllers
     public class ComprehensionController : Controller
     {        
         private IConfiguration _config;
+        private AuthHttpService _authHttpSvc;
 
         private readonly string _NAME_FROM_TOKEN_KEY = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name";
 
         public ComprehensionController(IConfiguration config)
         {
             _config = config;
+            _authHttpSvc = new AuthHttpService(_config.GetValue<string>("AuthLambdaUrl"));
         }
         
         [HttpGet("story")]
@@ -25,9 +28,17 @@ namespace api.pmt_story_time.Controllers
         {
             try
             {   
-                string token = HttpContext.Request.Headers["Authorization"].ToString().Split("Bearer ")[1];
-                var jwtToken = new JwtSecurityToken(token);
-                var name = jwtToken.Payload.First(data => data.Key == _NAME_FROM_TOKEN_KEY).Value.ToString();
+                string authHeader = HttpContext.Request.Headers["Authorization"];
+                if (!authHeader)
+                {
+                    return StatusCode(401, "Unauthorized");
+                }
+                bool isTokenValid = await _authHttpSvc.ValidateToken(authHeader);
+                if (!isTokenValid)
+                {
+                    return StatusCode(401, "Unauthorized");
+                }
+                var name = "paulmojicatech";
                 return Ok(name);
             }
             catch (Exception ex)
