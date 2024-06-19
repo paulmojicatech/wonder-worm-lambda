@@ -1,4 +1,6 @@
 using System.Net.Http.Headers;
+using Newtonsoft.Json;
+using pmt_story_time.Models;
 
 namespace pmt_story_time.Services
 {
@@ -11,7 +13,7 @@ namespace pmt_story_time.Services
             _LAMBDA_URL = lambdaUrl;
         }
 
-        public async Task<bool> ValidateToken(string token)
+        public async Task<VerifyTokenHttpGetResponse> ValidateToken(string token)
         {
             // Call the lambda function to validate the token
             try
@@ -25,11 +27,13 @@ namespace pmt_story_time.Services
                 HttpResponseMessage response =  await client.GetAsync("verify");
                 if (response.IsSuccessStatusCode)
                 {
-                    return true;
+                    string responseString = await response.Content.ReadAsStringAsync();
+                    VerifyTokenHttpGetResponse tokenResponse = JsonConvert.DeserializeObject<VerifyTokenHttpGetResponse>(responseString);
+                    return tokenResponse;
                 }
                 else
                 {
-                    return false;
+                    throw new Exception("Unauthorized");
                 }
             }
             catch (Exception ex)

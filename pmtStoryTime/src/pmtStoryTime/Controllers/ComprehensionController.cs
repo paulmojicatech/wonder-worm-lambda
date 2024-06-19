@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 using System.IdentityModel.Tokens.Jwt;
 using pmt_story_time.Services;
+using pmt_story_time.Models;
 
 namespace api.pmt_story_time.Controllers
 {
@@ -29,17 +30,16 @@ namespace api.pmt_story_time.Controllers
             try
             {   
                 string authHeader = HttpContext.Request.Headers["Authorization"];
-                if (!authHeader)
+                if (string.IsNullOrEmpty(authHeader))
                 {
                     return StatusCode(401, "Unauthorized");
                 }
-                bool isTokenValid = await _authHttpSvc.ValidateToken(authHeader);
-                if (!isTokenValid)
+                VerifyTokenHttpGetResponse token = await _authHttpSvc.ValidateToken(authHeader);
+                if (token == null)
                 {
                     return StatusCode(401, "Unauthorized");
-                }
-                var name = "paulmojicatech";
-                return Ok(name);
+                }                
+                return Ok(token);
             }
             catch (Exception ex)
             {
