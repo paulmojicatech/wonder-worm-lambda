@@ -59,7 +59,7 @@ namespace pmt_auth.Services
         {
           throw new Exception("Invalid request");
         }
-        string token = CreateToken(user, _tokenKey);
+        string token = CreateToken(user);
         return new LoginHttpPostResponse
         {
           Token = token,
@@ -107,7 +107,7 @@ namespace pmt_auth.Services
       return _context.Users.Any(u => u.Email == email);
     }
 
-    private string CreateToken(User user, string tokenKey)
+    private string CreateToken(User user)
     {
       try
       {

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using pmt_auth.Services;
 using pmt_auth.Context;
 using pmt_auth.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace pmt_auth.Controllers {
 
@@ -15,6 +16,20 @@ namespace pmt_auth.Controllers {
     public AuthController(PmtAuthContext ctx, IConfiguration config) {
       _config = config;
       _authSvc = new AuthService(ctx, _config.GetValue<string>("TokenKey"));
+    }
+
+    [HttpGet("verify")]    
+    [Authorize]
+    public async Task<IActionResult> Verify()
+    {
+      try
+      {
+        return Ok();
+      }
+      catch (Exception ex)
+      {
+        return StatusCode(500, ex.Message);
+      }
     }
 
     [HttpPost("register")]
@@ -57,7 +72,7 @@ namespace pmt_auth.Controllers {
           return StatusCode(500, ex.Message);
         }
       }
-    }
-  }
+    }    
+  }  
   
 }

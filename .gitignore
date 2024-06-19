@@ -15,3 +15,5 @@ pmtAuth/src/pmtAuth/appsettings.json
 pmtAuth/.DS_Store
 pmtAuth/src/.DS_Store
 pmtAuth/src/pmtAuth/.DS_Store
+pmtStoryTime/src/pmtStoryTime/appsettings.Development.json
+pmtStoryTime/src/pmtStoryTime/appsettings.json
