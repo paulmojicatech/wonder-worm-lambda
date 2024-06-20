@@ -16,7 +16,7 @@ namespace pmt_story_time.Services {
     }
 
 
-    public async Task<OpenAIHttpPostResponse> GetStory(string prompt) {
+    public async Task<StoryTimeHttpPostResponse> GetStory(string prompt) {
       // Call the OpenAI API to get a story
       try {        
         HttpClient client = new HttpClient();
@@ -65,7 +65,8 @@ namespace pmt_story_time.Services {
                 },
                 Usage = jObj["usage"]?.ToObject<OpenAIUsage>()
             };
-            return openAiResponse;
+            StoryTimeHttpPostResponse storyResponse = ParseOpenAIHttpResponse(openAiResponse);
+            return storyResponse;
         }
         else
         {
@@ -76,6 +77,48 @@ namespace pmt_story_time.Services {
       }
     }
 
+    private StoryTimeHttpPostResponse ParseOpenAIHttpResponse(OpenAIHttpPostResponse response)
+    {
+        // Parse the OpenAI response into a StoryTimeHttpPostResponse
+        try
+        {
+            string contentDetails = response.Choices.First().content;
+            StoryTimeHttpPostResponse storyTimeResponse = ParseContent(contentDetails);
+            return storyTimeResponse;
+        }
+        catch (Exception ex)
+        {
+            throw;
+        }
+    }
+
+    private StoryTimeHttpPostResponse ParseContent(string content)
+    {
+        // Parse the content into a list of questions and answers
+        try
+        {
+            List<OpenAIQuestionAndAnswer> questionsAndAnswers = new List<OpenAIQuestionAndAnswer>();
+            StoryTimeHttpPostResponse response = new StoryTimeHttpPostResponse();
+            JObject jObj = JObject.Parse(content);
+            response.Story = jObj["story"]?.ToString();
+            JArray jArray = JArray.Parse(jObj["comprehension"]?.ToString());
+            foreach (var item in jArray)
+            {
+                OpenAIQuestionAndAnswer questionAndAnswer = new OpenAIQuestionAndAnswer
+                {
+                    Question = item["question"]?.ToString(),
+                    Answer = item["answer"]?.ToString()
+                };
+                questionsAndAnswers.Add(questionAndAnswer);
+            }
+            response.QuestionsAndAnswers = questionsAndAnswers;
+            return response;
+        }
+        catch (Exception ex)
+        {
+            throw;
+        }
+    }
 
   }
 }
