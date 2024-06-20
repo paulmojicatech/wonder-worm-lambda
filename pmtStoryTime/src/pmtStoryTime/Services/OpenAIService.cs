@@ -104,10 +104,21 @@ namespace pmt_story_time.Services {
             JArray jArray = JArray.Parse(jObj["comprehension"]?.ToString());
             foreach (var item in jArray)
             {
+                JArray possibleAnswers = JArray.Parse(item["possibleAnswers"]?.ToString());
+                List<OpenAIPossibleAnswer> possibleAnswersList = new List<OpenAIPossibleAnswer>();
+                foreach (var answer in possibleAnswers)
+                {
+                    OpenAIPossibleAnswer possibleAnswer = new OpenAIPossibleAnswer
+                    {
+                        Answer = answer["answer"]?.ToString(),
+                        IsCorrect = bool.Parse(answer["isCorrect"]?.ToString())
+                    };
+                    possibleAnswersList.Add(possibleAnswer);
+                }
                 OpenAIQuestionAndAnswer questionAndAnswer = new OpenAIQuestionAndAnswer
                 {
                     Question = item["question"]?.ToString(),
-                    Answer = item["answer"]?.ToString()
+                    PossibleAnswers = possibleAnswersList
                 };
                 questionsAndAnswers.Add(questionAndAnswer);
             }

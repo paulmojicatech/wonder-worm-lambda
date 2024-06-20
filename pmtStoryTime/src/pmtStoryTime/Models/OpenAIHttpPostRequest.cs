@@ -24,6 +24,11 @@ namespace pmt_story_time.Models
 
     public class OpenAIQuestionAndAnswer {
       public string Question {get; set;}
+      public IEnumerable<OpenAIPossibleAnswer> PossibleAnswers {get; set;}
+    }
+
+    public class OpenAIPossibleAnswer {
       public string Answer {get; set;}
+      public bool IsCorrect {get; set;}
     }
 }

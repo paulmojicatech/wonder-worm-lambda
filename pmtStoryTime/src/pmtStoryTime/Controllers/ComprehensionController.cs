@@ -18,7 +18,7 @@ namespace api.pmt_story_time.Controllers
         private OpenAIService _openAISvc;
 
         private readonly string _NAME_FROM_TOKEN_KEY = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name";
-        private readonly string _PROMPT = "Generate a unique children's story containing 500 words. also generate 5 question and answers testing comprehension. i would like the response to be structured like an object where the keys are story, comprehension, which is an array of objects with the keys question and answer.";
+        private readonly string _PROMPT = "Generate a unique children's story containing 500 words. also generate 5 question and answers (in multiple choice format) testing comprehension. i would like the response to be structured like an object where the keys are story, comprehension, which is an array of objects with the keys question and possibleAnswers where possibleAnswers will be an array with 4 objects with the keys answer and isCorrect as a boolean.";
 
         public ComprehensionController(IConfiguration config)
         {
