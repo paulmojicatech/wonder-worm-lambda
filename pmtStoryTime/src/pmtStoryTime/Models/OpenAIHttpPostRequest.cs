@@ -16,4 +16,14 @@ namespace pmt_story_time.Models
         public string? logprobs { get; set; }    
         public string? finish_reason { get; set; }
     }
+
+    public class OpenAIContentDetails {
+      public string Story {get; set;}
+      public IEnumerable<OpenAIQuestionAndAnswer> QuestionsAndAnswers {get; set;}
+    }
+
+    public class OpenAIQuestionAndAnswer {
+      public string Question {get; set;}
+      public string Answer {get; set;}
+    }
 }

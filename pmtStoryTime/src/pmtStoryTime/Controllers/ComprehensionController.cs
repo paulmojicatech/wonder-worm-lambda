@@ -42,8 +42,8 @@ namespace api.pmt_story_time.Controllers
                 {
                     return StatusCode(401, "Unauthorized");
                 }     
-                OpenAIHttpPostResponse openAiResponse = await _openAISvc.GetStory(_PROMPT);           
-                return Ok(openAiResponse);
+                StoryTimeHttpPostResponse response = await _openAISvc.GetStory(_PROMPT);           
+                return Ok(response);
             }
             catch (Exception ex)
             {
