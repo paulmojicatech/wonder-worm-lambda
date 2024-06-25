@@ -17,6 +17,15 @@ var app = builder.Build();
 
 
 app.UseHttpsRedirection();
+
+// CORS setup
+app.UseCors(options => options
+  .AllowAnyMethod()
+  .AllowAnyHeader()
+  .SetIsOriginAllowed(origin => true)
+  .AllowCredentials()
+);
+
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
